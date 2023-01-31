@@ -3,20 +3,25 @@ import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import { ActionButton } from "../../components/ActionButton";
 import { Participant } from "../../components/Participant";
 import { styles } from "./styles";
+import { useState } from "react";
 
 export function Home(){
-  const participants = [
-    "Cassio Fernandes", "Suely Caroline", "Adenira Alves", "Cleber Nilson",
-    "Carlos Fernandes", "Andriely Soares", "Ingrid Martins", "Pedro Camargo",
-    "Eloa Martins", "Isabela Fernandes"];
   
-    function handleParticipantAdd(participante: string){
-
-      if(participants.includes("Cassio Fernandes")){
-        return Alert.alert("Participante Existe", "Já existe um participante na lista com esse nome!")
-      }
-    
+  const [participant, setParticipant] = useState<string>("");
+  const [participants, setParticipants] = useState<string[]>([])
+  
+  
+    function handleParticipantAdd(){
       console.log("Você clicou em adicionar o participante");
+      if(participant.length == 0){
+        return Alert.alert("Participante Inexistente", "O nome do participante não pode ser vazio!")
+      }
+
+      if(participants.includes(participant)){
+        return Alert.alert("Participante Existe", `O participante ${participant} já esta na lista!`)
+      }
+      setParticipants(prevState => [...prevState, participant]);
+      return setParticipant("")
     }
 
   return(
@@ -28,6 +33,8 @@ export function Home(){
         <TextInput style={styles.input}
           placeholder="Nome do participante"
           placeholderTextColor="#6b6b6b"
+          value={participant}
+          onChangeText={setParticipant}
         />
         <ActionButton onClick={()=>handleParticipantAdd()}/>
       </View>
@@ -39,6 +46,7 @@ export function Home(){
           <Participant
             key={item}
             nome={item}
+            setParticipantsFunction={setParticipants}
           />
         )}
         showsVerticalScrollIndicator={false}

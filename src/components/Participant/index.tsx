@@ -5,9 +5,10 @@ import { styles } from "./styles";
 
 type participantProps = {
   nome: string;
+  setParticipantsFunction: Function;
 }
 
-function handleParticipantRemove(nome: string) {
+function handleParticipantRemove(nome: string, setParticipantsFunction: Function) {
   Alert.alert("Remover", `Remover o participante ${nome}?`, [
     {
       text: 'Não',
@@ -16,7 +17,8 @@ function handleParticipantRemove(nome: string) {
     {
       text: 'Sim',
       onPress: ()=>{
-        Alert.alert("Deletado!")
+        setParticipantsFunction((prevState: String[]) => prevState.filter(participant => participant !== nome))
+        Alert.alert("Usuário removido!")
       }
     }
   ])    
@@ -28,7 +30,7 @@ export function Participant(props: participantProps){
     <View style = {styles.container}>
       <Text style = {styles.name}>{props.nome}</Text>
 
-      <ActionButton minusOperation={true} onClick={()=>handleParticipantRemove(props.nome)}/>
+      <ActionButton minusOperation={true} onClick={()=>handleParticipantRemove(props.nome, props.setParticipantsFunction)}/>
     </View>
   )
 }
